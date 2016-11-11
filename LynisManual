@@ -1,0 +1,151 @@
+Lynis是一个开源的安全工具。它可以对运行类Unix系统的系统做安全审计，并根据审计结果对系统加固和一致性测试提供指导和建议。
+Lynis在本地系统上执行深度本地扫描，因此比基于网络的漏洞扫描更加深入。通过BootLoader开始，直到安装文件包。分析之后，他向管理员展示扫描结果，包括加固方案。
+
+Installation
+
+一般来说有四种可选方案：
+* 通过包管理工具安装；
+* 通过Git安装；
+* 直接下载安装；
+* 通过Homebrew（MacOS）
+
+1. 通过包管理工具安装
+
+使用包管理工具安装是开始使用Lynis的一个可选方式。这对于大多数的操作系统和发行版都是可行的。（如果要安装最新版的软件应该先添加Lynis的仓库：https://packages.cisofy.com/到包管理工具）
+
+Redhat
+同样适用于别的使用YUM的系统（CentOS、Fedora、RHEL）
+	yum install lynis
+
+Debian
+同样适用于别的使用apt的系统（ubuntu、linux Mint。）
+	apt-get install lynis
+
+openSUSE
+	zypper install lynis
+
+2. 通过Git安装
+
+直接进入要安装的位置使用Git获取最新的工程，Git会在该目录下创建一个lynis目录，这个目录包含了lynis的所有文件。
+clone Project：
+      git clone https：//github.com/CISOfy/lynis
+
+3. 直接下载安装
+
+lynis可以被放在任意位置，这里以“/usr/local/lynis”为例：
+创建安装目录
+	mkdir -p /usr/local/lynis
+	cd /usr/local
+下载
+把最新的lynis下载到"/usr/local"目录
+	wget https://cisofy.com/files/lynis-2.4.0.tar.gz
+	or
+	curl https://cisofy.com/files/lynis-2.4.0.tar.gz
+	or
+	fetch https://cisofy.com/files/lynis-2.4.0.tar.gz
+解压
+	tar xfvz lynis-2.4.0.tar.gz
+
+4. 通过Homebrew安装
+
+	brew install lynis
+
+
+
+First Run
+
+如果安装时使用的是包管理工具或者Homebrew，那么在任何目录都可以直接运行。如果是使用其他方式安装的那么你应该进入到对应的安装目录使用 "./lynis"来调用lynis，或者把它加入的path中。
+Lynis可以在不做任何预配置的情况下运行。当然也可以进行配置和微调。
+
+使用下面的命令就能进行基本扫描
+	lynis audit system
+
+默认情况下lynis会在执行完一个步骤后暂停。你可以使用Ctrl＋c来结束它。按下Enter键它会继续执行后续的检测。如果你想在运行lynis时没有暂停那么，可以使用--quick选项。
+	lynis audit system --quick
+
+常用命令
+connamd		Description
+audit system	进行一次系统审计
+show commands	显示可用的lynis命令
+show help	显示帮助
+show profiles	显示找到的profile
+show settings	显示在profile中激活的设置项
+show version	显示当前lynis版本
+
+
+选项
+option		缩写	Description
+-auditor "name"		指定审计者
+-cronjob 		以任务的形式运行lynis（包括-c -Q）
+-debug			显示Debug信息
+-help		-h	显示lynis的参数
+-man-page		显示man帮助
+-no-colors		不显示颜色
+-pentest		执行渗透测试扫描
+-quick			不等待用户输入
+-quiet			不显示警告信息
+-reverse-colors		反色显示
+-verbose		显示verbose信息
+
+检测报告和日志文件
+lynis会进行深入的审计并将它的结果输出在以下位置：
+	a.屏幕
+	b.日志
+	c.报告
+
+屏幕输出：lynis会对系统扫描并进行数百次的测试。对于大多数的测试来说，都会在屏幕上给出一个测试结果。（可能的结果包括通过或者警告，找到或者没找到，或者一个值）
+[+] System Tools
+------------------------------------
+  - Scanning available tools...
+  - Checking system binaries...
+
+[+] Plugins (phase 1)
+------------------------------------
+ Note: plugins have more extensive tests and may take several minutes to complete
+  
+  - Plugins enabled                                           [ NONE ]
+
+[+] Boot and services
+------------------------------------
+  - Service Manager                                           [ systemd ]
+  - Checking UEFI boot                                        [ DISABLED ]
+  - Checking presence GRUB2                                   [ FOUND ]
+    - Checking for password protection                        [ WARNING ]
+  - Check running services (systemctl)                        [ DONE ]
+        Result: found 36 running services
+  - Check enabled services at boot (systemctl)                [ DONE ]
+        Result: found 31 enabled services
+  - Check startup files (permissions)                         [ OK ]
+
+
+日志文件：部分测试结果会在系统扫描的时候输出在屏幕上。详细的结果会在一个独立的日志文件中记录（默认在“/var/log/lynis.log”）。这些信息对于一些高级测试人员是十分有用的。这个日志文件中包含如下信息：某个操作或者事件的时间、某个测试失败或者调过的原因、内部测试的输出、配置和提升的建议威胁和影响的得分。
+例：
+2016-11-11 13:01:12 Language is set to zh
+2016-11-11 13:01:17 ===---------------------------------------------------------------===
+2016-11-11 13:01:17 Program version:           2.4.1
+2016-11-11 13:01:17 Operating system:          Linux
+2016-11-11 13:01:17 Operating system name:     Debian
+2016-11-11 13:01:17 Operating system version:  8.6
+2016-11-11 13:01:17 Kernel version:            3.16.0
+2016-11-11 13:01:17 Kernel version (full):     3.16.0-4-amd64
+2016-11-11 13:01:17 Hardware platform:         x86_64
+2016-11-11 13:01:17 -----------------------------------------------------
+2016-11-11 13:01:17 Hostname:                  debian
+2016-11-11 13:01:17 Auditor:                   [Not Specified]
+2016-11-11 13:01:17 Profiles:                  /etc/lynis/default.prf
+2016-11-11 13:01:17 Work directory:            /usr/local/lynis
+
+
+报告文件：审计过程中Lynis会将收集到的信息存储在报告文件中（默认“/var/log/lynis-report.dat”）。Lynis支持一种收集结果并将其友好展现的报告格式。报告文件能够用来和之前的测试结果进行比较。（日志文件的内容包含remarks、section、option/value）
+例：
+hostid=e0a19e1d3bcbdc8711483c8383b230f4d231778c
+suggestion[]=BOOT-5122|Set a password on GRUB bootloader to prevent altering boot configuration (e.g. boot in single user mode without password)|-|-|
+running_service_tool=systemctl
+running_service[]=accounts-daemon
+running_service[]=acpid
+
+
+	
+
+
+
