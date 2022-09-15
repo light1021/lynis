@@ -1,6 +1,13 @@
 # Lynis Changelog
 
-## Lynis 3.0.8 (not released yet)
+## Lynis 3.0.9 (not released yet)
+
+### Changed
+- DBS-1820 - added newer style format for Mongo authorization setting
+
+---------------------------------------------------------------------------------
+
+## Lynis 3.0.8 (2022-05-17)
 
 ### Added
 - MALW-3274 - Detect McAfee VirusScan Command Line Scanner
@@ -13,6 +20,7 @@
 - FILE-7524 - Test enhanced to support symlinks
 - HTTP-6643 - Support ModSecurity version 2 and 3
 - KRNL-5788 - Only run relevant tests and improved logging
+- KRNL-5820 - Additional path for security/limits.conf
 - KRNL-5830 - Check for /var/run/needs_restarting (Slackware)
 - KRNL-5830 - Add a presence check for /boot/vmlinuz
 - PRNT-2308 - Bugfix that prevented test from storing values correctly
