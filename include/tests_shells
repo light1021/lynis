@@ -5,11 +5,10 @@
 #   Lynis
 # ------------------
 #
-# Copyright 2007-2013, Michael Boelen
-# Copyright 2007-2021, CISOfy
+# Copyright (c) Michael Boelen, CISOfy, and many contributors.
 #
-# Website  : https://cisofy.com
-# Blog     : http://linux-audit.com
+# Website  : https://cisofy.com/
+# Blog     : https://linux-audit.com/
 # GitHub   : https://github.com/CISOfy/lynis
 #
 # Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
@@ -52,7 +51,7 @@
     Register --test-no SHLL-6202 --os FreeBSD --weight L --network NO --category security --description "Check console TTYs"
     if [ ${SKIPTEST} -eq 0 ]; then
         LogText "Test: Checking console TTYs"
-        FIND=$(${EGREPBINARY} '^console' ${ROOTDIR}etc/ttys | ${GREPBINARY} -v 'insecure')
+        FIND=$(${GREPBINARY} -E '^console' ${ROOTDIR}etc/ttys | ${GREPBINARY} -v 'insecure')
         if [ -z "${FIND}" ]; then
             Display --indent 2 --text "- Checking console TTYs" --result "${STATUS_OK}" --color GREEN
             LogText "Result: console is secured against single user mode without password."
@@ -277,9 +276,10 @@
 
 Report "session_timeout_enabled=${IDLE_TIMEOUT}"
 
+#
+#################################################################################
+#
 
 WaitForKeyPress
 
-#
-#================================================================================
-# Lynis - Copyright 2007-2021, CISOfy - http://cisofy.com
+# EOF
